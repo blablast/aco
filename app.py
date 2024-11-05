@@ -67,7 +67,7 @@ plot_convergence = st.empty()
 best_route_lengths = []  # For storing convergence data
 
 # Function to plot nodes, pheromone trails, and best route
-def plot_route_and_pheromones(ax, best_route, pheromones):
+def plot_route_and_pheromones(ax, best_route, pheromones, iteration):
     ax.clear()
     nodes = problem.nodes
     num_nodes = len(nodes)
@@ -75,18 +75,19 @@ def plot_route_and_pheromones(ax, best_route, pheromones):
     cmap = cm.Reds
 
     # Plot pheromone trails with a threshold for performance
-    for i in range(num_nodes):
-        for j in range(i + 1, num_nodes):
-            pheromone_level = pheromones[i, j] / max_pheromone
-            if pheromone_level > 0.2:
-                x_values = [nodes['x'].iloc[i], nodes['x'].iloc[j]]
-                y_values = [nodes['y'].iloc[i], nodes['y'].iloc[j]]
-                ax.plot(
-                    x_values, y_values, color=cmap(pheromone_level),
-                    linewidth=2 + pheromone_level * 5,
-                    alpha=pheromone_level,
-                    solid_capstyle='round'  # Rounded line ends
-                )
+    if iteration > 4:
+        for i in range(num_nodes):
+            for j in range(i + 1, num_nodes):
+                pheromone_level = pheromones[i, j] / max_pheromone
+                if pheromone_level > 0.2:
+                    x_values = [nodes['x'].iloc[i], nodes['x'].iloc[j]]
+                    y_values = [nodes['y'].iloc[i], nodes['y'].iloc[j]]
+                    ax.plot(
+                        x_values, y_values, color=cmap(pheromone_level),
+                        linewidth=2 + pheromone_level * 5,
+                        alpha=pheromone_level,
+                        solid_capstyle='round'  # Rounded line ends
+                    )
 
     ax.scatter(nodes['x'], nodes['y'], c='orange', s=20, zorder=10)
     route_x = nodes['x'].iloc[best_route]
@@ -131,7 +132,7 @@ def plot_callback(info):
 
     # Update route and pheromone plot
     fig1, ax1 = plt.subplots(figsize=(10, 5), dpi=100)
-    plot_route_and_pheromones(ax1, best_route, pheromones)
+    plot_route_and_pheromones(ax1, best_route, pheromones, iteration)
     ax1.set_title("Najlepsza Trasa i Ścieżki Feromonowe", color='white', fontsize=10, pad=10)
     ax1.set_xlabel("X Współrzędne", color='white')
     ax1.set_ylabel("Y Współrzędne", color='white')
