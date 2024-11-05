@@ -75,7 +75,7 @@ def plot_route_and_pheromones(ax, best_route, pheromones, iteration):
     cmap = cm.Reds
 
     # Plot pheromone trails with a threshold for performance
-    if iteration > 4:
+    if iteration > 2:
         for i in range(num_nodes):
             for j in range(i + 1, num_nodes):
                 pheromone_level = pheromones[i, j] / max_pheromone
